@@ -1,10 +1,1 @@
-React-native starter kit
-using
-
-- redux-actions
-- redux-saga
-- react-navigation
-- native-base
-- eslint
-- prettier
-
+React-native application for e-clinic
