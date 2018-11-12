@@ -2,6 +2,7 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import { Provider } from 'react-redux';
+import firebase from 'firebase';
 
 import RootNavigator from './src/navigation/RootNavigator';
 import configureStore from './src/config/configStore';
@@ -13,8 +14,19 @@ export default class App extends React.Component {
     isLoadingComplete: false
   };
 
-  render() {
+  componentDidMount() {
+    const firebaseConfig = {
+      apiKey: 'AIzaSyAiP4pWJfhdxJDmnpmgk-X0eREFD4H6des',
+      authDomain: 'e-clinic-dev.firebaseapp.com',
+      databaseURL: 'https://e-clinic-dev.firebaseio.com',
+      projectId: 'e-clinic-dev',
+      storageBucket: 'e-clinic-dev.appspot.com',
+      messagingSenderId: '293417424837'
+    };
+    firebase.initializeApp(firebaseConfig);
+  }
 
+  render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
         <AppLoading
@@ -24,8 +36,7 @@ export default class App extends React.Component {
         />
       );
     } else {
-      
-      const store=configureStore(rootReducer, rootSaga);
+      const store = configureStore(rootReducer, rootSaga);
 
       return (
         <Provider store={store}>
