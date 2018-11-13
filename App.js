@@ -8,6 +8,7 @@ import RootNavigator from './src/navigation/RootNavigator';
 import configureStore from './src/config/configStore';
 import rootReducer from './src/modules';
 import rootSaga from './src/sagas';
+import { firebaseConfig } from './keys';
 
 export default class App extends React.Component {
   state = {
@@ -15,14 +16,6 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
-    const firebaseConfig = {
-      apiKey: 'AIzaSyAiP4pWJfhdxJDmnpmgk-X0eREFD4H6des',
-      authDomain: 'e-clinic-dev.firebaseapp.com',
-      databaseURL: 'https://e-clinic-dev.firebaseio.com',
-      projectId: 'e-clinic-dev',
-      storageBucket: 'e-clinic-dev.appspot.com',
-      messagingSenderId: '293417424837'
-    };
     firebase.initializeApp(firebaseConfig);
   }
 
