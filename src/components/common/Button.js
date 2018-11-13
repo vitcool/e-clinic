@@ -1,23 +1,19 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Button as ButtonNativeBase, Text } from 'native-base';
+import { Button as ButtonReactNativeElements } from 'react-native-elements';
 import PropTypes from 'prop-types';
 
-const Button = ({ onPress, children, label }) => {
+const Button = ({ onPress, title }) => {
   return (
     <View>
-      {label ? <Text>{label}</Text> : null}
-      <ButtonNativeBase onPress={onPress} block>
-        <Text>{children}</Text>
-      </ButtonNativeBase>
+      <ButtonReactNativeElements onPress={onPress} small title={title} backgroundColor="#0066FF" />
     </View>
   );
 };
 
 Button.propTypes = {
   onPress: PropTypes.func,
-  children: PropTypes.object,
-  label: PropTypes.string
+  title: PropTypes.string
 };
 
 export { Button };
