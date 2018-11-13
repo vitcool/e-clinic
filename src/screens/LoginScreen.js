@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { Card } from 'react-native-elements';
+import { Card, Text } from 'react-native-elements';
 import { Input, Button } from '../components/common';
 
 export default class LoginScreen extends React.Component {
@@ -10,7 +10,7 @@ export default class LoginScreen extends React.Component {
     password: ''
   };
 
-  goToGreetingsPage = () => {
+  handleLoginPress = () => {
     const { emailLoginRequest } = this.props;
     const { email, password } = this.state;
     emailLoginRequest({ email, password });
@@ -20,8 +20,14 @@ export default class LoginScreen extends React.Component {
     this.setState({ [name]: data });
   };
 
+  handleSignupPress = () => {
+    const { navigation } = this.props;
+    navigation.navigate('Signup');
+  };
+
   render() {
     const { email, password } = this.state;
+    const { passwordInput, signupLink } = styles;
     return (
       <View>
         <Card>
@@ -39,15 +45,29 @@ export default class LoginScreen extends React.Component {
             value={password}
             onChangeText={text => this.onLoginTextChanged('password', text)}
             secureTextEntry={true}
-            style={{ marginBottom: 10 }}
+            style={passwordInput}
           />
-          <Button onPress={this.goToGreetingsPage} title={'Login'} />
+          <Text h4 onPress={this.handleSignupPress} style={signupLink}>
+            Sign Up
+          </Text>
+          <Button onPress={this.handleLoginPress} title={'Login'} />
         </Card>
       </View>
     );
   }
 }
 
+const styles = {
+  passwordInput: { marginBottom: 10 },
+  signupLink: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginBottom: 10,
+    textDecorationLine: 'underline'
+  }
+};
+
 LoginScreen.propTypes = {
-  emailLoginRequest: PropTypes.func
+  emailLoginRequest: PropTypes.func,
+  navigation: PropTypes.object
 };
