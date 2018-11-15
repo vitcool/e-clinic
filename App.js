@@ -2,13 +2,11 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import { Provider } from 'react-redux';
-import firebase from 'firebase';
-
 import RootNavigator from './src/navigation/RootNavigator';
 import configureStore from './src/config/configStore';
 import rootReducer from './src/modules';
 import rootSaga from './src/sagas';
-import { firebaseConfig } from './keys';
+import initializeFirebase from './src/config/firebaseConfig';
 
 export default class App extends React.Component {
   state = {
@@ -16,7 +14,7 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
-    firebase.initializeApp(firebaseConfig);
+    initializeFirebase();
   }
 
   render() {
