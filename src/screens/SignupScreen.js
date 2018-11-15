@@ -13,8 +13,8 @@ export default class LoginScreen extends React.Component {
 
   handleSignupPress = () => {
     const { signupRequest } = this.props;
-    const { email, password } = this.state;
-    signupRequest({ email, password });
+    const { email, password, isDoctor } = this.state;
+    signupRequest({ email, password, isDoctor });
   };
 
   onSignupTextChanged = (name, data) => {
