@@ -1,17 +1,21 @@
 import { handleActions } from 'redux-actions';
 import {
   emailLoginRequest,
-  loginRequestSuccess,
-  loginRequestFailed,
+  emailLoginSuccess,
+  emailLoginFailed,
   signupRequest,
-  signupRequestSuccess,
-  signupRequestFailed
+  signupSuccess,
+  signupFailed,
+  forgotPasswordRequest,
+  forgotPasswordSuccess,
+  forgotPasswordFailed
 } from './actions';
 
 const defaultState = {
   isUserLogined: false,
   isLoginRequestPending: false,
-  currentUser: {}
+  currentUser: {},
+  isForgotPasswordRequestPending: false
 };
 
 export default handleActions(
@@ -21,13 +25,13 @@ export default handleActions(
       isLoginRequestPending: true,
       isUserLogined: false
     }),
-    [loginRequestSuccess]: (state, { payload }) => ({
+    [emailLoginSuccess]: (state, { payload }) => ({
       ...state,
       isUserLogined: true,
       isLoginRequestPending: false,
       currentUser: payload.user
     }),
-    [loginRequestFailed]: state => ({
+    [emailLoginFailed]: state => ({
       ...state,
       isUserLogined: false,
       isLoginRequestPending: false
@@ -36,15 +40,27 @@ export default handleActions(
       ...state,
       isSignupRequestPending: true
     }),
-    [signupRequestSuccess]: (state, { payload }) => ({
+    [signupSuccess]: (state, { payload }) => ({
       ...state,
       isSignupRequestPending: false,
       currentUser: payload.user,
       isUserLogined: true
     }),
-    [signupRequestFailed]: state => ({
+    [signupFailed]: state => ({
       ...state,
       isSignupRequestPending: false
+    }),
+    [forgotPasswordRequest]: state => ({
+      ...state,
+      isForgotPasswordRequestPending: true
+    }),
+    [forgotPasswordSuccess]: state => ({
+      ...state,
+      isForgotPasswordRequestPending: false
+    }),
+    [forgotPasswordFailed]: state => ({
+      ...state,
+      isForgotPasswordRequestPending: false
     })
   },
   defaultState
