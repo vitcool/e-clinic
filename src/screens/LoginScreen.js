@@ -25,6 +25,11 @@ export default class LoginScreen extends React.Component {
     navigation.navigate('Signup');
   };
 
+  handleForgotPassword = () => {
+    const { navigation } = this.props;
+    navigation.navigate('ForgotPassword');
+  }
+
   render() {
     const { email, password } = this.state;
     const { passwordInput, signupLink } = styles;
@@ -49,6 +54,9 @@ export default class LoginScreen extends React.Component {
           />
           <Text h4 onPress={this.handleSignupPress} style={signupLink}>
             Sign Up
+          </Text>
+          <Text h4 onPress={this.handleForgotPassword} style={signupLink}>
+            Forgot Password
           </Text>
           <Button onPress={this.handleLoginPress} title={'Login'} />
         </Card>

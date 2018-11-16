@@ -1,65 +1,66 @@
-import firebase from 'firebase';
-import '@firebase/functions';
 import { takeEvery, put, call } from 'redux-saga/effects';
+import { NavigationActions } from 'react-navigation';
 
 import {
   emailLoginRequest,
-  loginRequestSuccess,
-  loginRequestFailed,
+  emailLoginSuccess,
+  emailLoginFailed,
   signupRequest,
-  signupRequestSuccess,
-  signupRequestFailed
+  signupSuccess,
+  signupFailed,
+  forgotPasswordRequest,
+  forgotPasswordSuccess,
+  forgotPasswordFailed
 } from '../modules/auth/actions';
-
-const firebaseLogin = (email, password) =>
-  firebase.auth().signInWithEmailAndPassword(email, password);
-
-const firebaseSignup = (email, password) =>
-  firebase.auth().createUserWithEmailAndPassword(email, password);
-
-const firebaseAddDoctorsClaim = email => {
-  const addDoctor = firebase.functions().httpsCallable('addDoctor');
-  return addDoctor({ email });
-};
-
-const checkUserClaims = () => firebase.auth().currentUser.getIdTokenResult();
+import * as firebaseCalls from './../firebase/auth';
 
 function* emailLoginRequestWorker({ payload: { email, password } }) {
   try {
-    const response = yield call(firebaseLogin, email, password);
+    const response = yield call(firebaseCalls.login, email, password);
     const { user } = response;
-    const userClaimsResult = yield call(checkUserClaims);
-    console.log(userClaimsResult.claims.doctor);
-    debugger;
+    const userClaimsResult = yield call(firebaseCalls.checkUserClaims);
+    // handle if user is doctor - userClaimsResult.claims.doctor
     user
-      ? yield put(loginRequestSuccess({ user }))
-      : yield put(loginRequestFailed());
+      ? yield put(emailLoginSuccess({ user }))
+      : yield put(emailLoginFailed());
   } catch (e) {
-    console.log(e);
+    //handle exception
+    emailLoginFailed(e);
   }
 }
 
 function* signupRequestWorker({ payload: { email, password, isDoctor } }) {
   try {
-    const response = yield call(firebaseSignup, email, password);
+    const response = yield call(firebaseCalls.signup, email, password);
     const { user } = response;
     if (user) {
       if (isDoctor) {
-        const res = yield call(firebaseAddDoctorsClaim, email);
-        console.log(res);
+        yield call(firebaseCalls.addDoctorsClaim, email);
       }
-      yield put(signupRequestSuccess({ user }));
+      yield put(signupSuccess({ user }));
     } else {
-      yield put(signupRequestFailed());
+      yield put(signupFailed());
     }
   } catch (e) {
-    console.log(e);
+    yield put(signupFailed(e));
+  }
+}
+
+function* forgotPasswordWorker({ payload: { email } }) {
+  try {
+    yield call(firebaseCalls.forgotPassword, email);
+    yield put(forgotPasswordSuccess());
+    //the following line looks like not working!
+    yield put(NavigationActions.navigate({ routeName: 'Login' }));
+  } catch (e) {
+    yield put(forgotPasswordFailed(e));
   }
 }
 
 function* authWatcher() {
   yield takeEvery(emailLoginRequest, emailLoginRequestWorker);
   yield takeEvery(signupRequest, signupRequestWorker);
+  yield takeEvery(forgotPasswordRequest, forgotPasswordWorker);
 }
 
 export default authWatcher;

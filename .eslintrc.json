@@ -10,7 +10,8 @@
     "rules": {
         "quotes": [2, "single"],
         "no-invalid-this": 0,
-        "babel/no-invalid-this": 1
+        "babel/no-invalid-this": 1,
+        "no-debugger": 1
     },
     "extends": [
         "eslint:recommended",

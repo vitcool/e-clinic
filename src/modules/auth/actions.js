@@ -2,14 +2,18 @@ import { createAction } from 'redux-actions';
 
 export const emailLoginRequest = createAction('LOGIN_REQUEST');
 
-export const loginRequestSuccess = createAction('LOGIN_SUCCESS');
+export const emailLoginSuccess = createAction('LOGIN_SUCCESS');
 
-export const loginRequestFailed = createAction('LOGIN_FAILED');
+export const emailLoginFailed = createAction('LOGIN_FAILED');
 
 export const signupRequest = createAction('SIGNUP_REQUEST');
 
-export const signupRequestSuccess = createAction('SIGNUP_REQUEST_SUCCESS');
+export const signupSuccess = createAction('SIGNUP_SUCCESS');
 
-export const signupRequestFailed = createAction('SIGNUP_REQUEST_FAILED');
+export const signupFailed = createAction('SIGNUP_FAILED');
 
+export const forgotPasswordRequest = createAction('FORGOT_PASSWORD_REQUEST');
 
+export const forgotPasswordSuccess = createAction('FORGOT_PASSWORD_SUCCESS');
+
+export const forgotPasswordFailed = createAction('FORGOT_PASSWORD_FAILED');
