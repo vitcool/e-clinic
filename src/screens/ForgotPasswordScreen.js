@@ -21,7 +21,7 @@ export default class ForgotPassword extends React.Component {
     const { forgotPasswordRequest } = this.props;
     const { email } = this.state;
 
-    const forgotPasswordData = { email };
+    const forgotPasswordData = { email: email.toLowerCase() };
     const validation = checkValidation(
       forgotPasswordData,
       forgotPasswordDataSchema
