@@ -9,6 +9,7 @@ const Checkbox = ({ checked, onPress, name }) => {
       checked={checked}
       name={name}
       onPress={() => onPress(name)}
+      style={{ backgroundColor: 'white', borderColor: 'white' }}
     />
   );
 };

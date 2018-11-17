@@ -2,11 +2,14 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import { Provider } from 'react-redux';
+import { Toast } from 'react-native-redux-toast';
+
 import RootNavigator from './src/navigation/RootNavigator';
 import configureStore from './src/config/configStore';
 import rootReducer from './src/modules';
 import rootSaga from './src/sagas';
 import initializeFirebase from './src/config/firebaseConfig';
+import NavigationService from './src/navigation/NavigationService';
 
 export default class App extends React.Component {
   state = {
@@ -33,7 +36,12 @@ export default class App extends React.Component {
         <Provider store={store}>
           <View style={styles.container}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            <RootNavigator />
+            <RootNavigator
+              ref={navigatorRef =>
+                NavigationService.setTopLevelNavigator(navigatorRef)
+              }
+            />
+            <Toast messageStyle={{color: 'white'}} />
           </View>
         </Provider>
       );

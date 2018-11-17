@@ -17,3 +17,7 @@ export const forgotPassword = email =>
 
 export const checkUserClaims = () =>
   firebase.auth().currentUser.getIdTokenResult();
+
+export const logout = () => firebase.auth().signOut();
+
+export const updateProfileInfo = (user, data) => user.updateProfile(data);
