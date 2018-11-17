@@ -1,9 +1,8 @@
 import { handleActions } from 'redux-actions';
-import { initStart, initFinish, nameUpdate } from './actions';
+import { initStart, initFinish } from './actions';
 
 const defaultState = {
-  isStarted: false,
-  name: ''
+  isStarted: false
 };
 
 export default handleActions(
@@ -15,10 +14,6 @@ export default handleActions(
     [initFinish]: state => ({
       ...state,
       isStarted: true
-    }),
-    [nameUpdate]: (state, { payload }) => ({
-      ...state,
-      name: payload
     })
   },
   defaultState

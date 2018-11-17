@@ -2,18 +2,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { Card, Text } from 'react-native-elements';
+
 import { Input, Button } from '../components/common';
+import checkValidation from '../helpers/validation';
+import { loginDataSchema } from '../helpers/validationSchems';
 
 export default class LoginScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Login'
+  };
+
   state = {
     email: '',
-    password: ''
+    password: '',
+    validationErrors: {}
   };
 
   handleLoginPress = () => {
     const { emailLoginRequest } = this.props;
     const { email, password } = this.state;
-    emailLoginRequest({ email, password });
+    const emailLoginData = { email, password };
+    const validation = checkValidation(emailLoginData, loginDataSchema);
+
+    this.setState({ validationErrors: validation.errors });
+
+    validation.valid && emailLoginRequest(emailLoginData);
   };
 
   onLoginTextChanged = (name, data) => {
@@ -28,13 +41,14 @@ export default class LoginScreen extends React.Component {
   handleForgotPassword = () => {
     const { navigation } = this.props;
     navigation.navigate('ForgotPassword');
-  }
+  };
 
   render() {
-    const { email, password } = this.state;
+    const { isLoginRequestPending } = this.props;
+    const { email, password, validationErrors } = this.state;
     const { passwordInput, signupLink } = styles;
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Card>
           <Input
             name="email"
@@ -42,6 +56,7 @@ export default class LoginScreen extends React.Component {
             label="Email"
             value={email}
             onChangeText={text => this.onLoginTextChanged('email', text)}
+            errors={validationErrors}
           />
           <Input
             name="password"
@@ -51,6 +66,7 @@ export default class LoginScreen extends React.Component {
             onChangeText={text => this.onLoginTextChanged('password', text)}
             secureTextEntry={true}
             style={passwordInput}
+            errors={validationErrors}
           />
           <Text h4 onPress={this.handleSignupPress} style={signupLink}>
             Sign Up
@@ -58,7 +74,12 @@ export default class LoginScreen extends React.Component {
           <Text h4 onPress={this.handleForgotPassword} style={signupLink}>
             Forgot Password
           </Text>
-          <Button onPress={this.handleLoginPress} title={'Login'} />
+          <Button
+            onPress={this.handleLoginPress}
+            title={'Login'}
+            loading={isLoginRequestPending}
+            disabled={isLoginRequestPending}
+          />
         </Card>
       </View>
     );
@@ -77,5 +98,6 @@ const styles = {
 
 LoginScreen.propTypes = {
   emailLoginRequest: PropTypes.func,
-  navigation: PropTypes.object
+  navigation: PropTypes.object,
+  isLoginRequestPending: PropTypes.bool
 };

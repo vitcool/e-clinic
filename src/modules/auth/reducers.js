@@ -8,14 +8,18 @@ import {
   signupFailed,
   forgotPasswordRequest,
   forgotPasswordSuccess,
-  forgotPasswordFailed
+  forgotPasswordFailed,
+  logoutRequest,
+  logoutSuccess,
+  logoutFailed
 } from './actions';
 
 const defaultState = {
   isUserLogined: false,
   isLoginRequestPending: false,
   currentUser: {},
-  isForgotPasswordRequestPending: false
+  isForgotPasswordRequestPending: false,
+  isSignupRequestPending: false
 };
 
 export default handleActions(
@@ -29,12 +33,13 @@ export default handleActions(
       ...state,
       isUserLogined: true,
       isLoginRequestPending: false,
-      currentUser: payload.user
+      currentUser: { ...payload.user, isDoctor: payload.isDoctor }
     }),
-    [emailLoginFailed]: state => ({
+    [emailLoginFailed]: (state, { payload }) => ({
       ...state,
       isUserLogined: false,
-      isLoginRequestPending: false
+      isLoginRequestPending: false,
+      emailLoginErrorMessage: payload.message
     }),
     [signupRequest]: state => ({
       ...state,
@@ -46,9 +51,10 @@ export default handleActions(
       currentUser: payload.user,
       isUserLogined: true
     }),
-    [signupFailed]: state => ({
+    [signupFailed]: (state, { payload }) => ({
       ...state,
-      isSignupRequestPending: false
+      isSignupRequestPending: false,
+      signupErrorMessage: payload.message
     }),
     [forgotPasswordRequest]: state => ({
       ...state,
@@ -58,9 +64,25 @@ export default handleActions(
       ...state,
       isForgotPasswordRequestPending: false
     }),
-    [forgotPasswordFailed]: state => ({
+    [forgotPasswordFailed]: (state, { payload }) => ({
       ...state,
-      isForgotPasswordRequestPending: false
+      isForgotPasswordRequestPending: false,
+      forgotPasswordErrorMessage: payload.message
+    }),
+    [logoutRequest]: state => ({
+      ...state,
+      isLogoutRequestPending: true
+    }),
+    [logoutSuccess]: state => ({
+      ...state,
+      isUserLogined: false,
+      isLogoutRequestPending: false,
+      currentUser: defaultState.currentUser
+    }),
+    [logoutFailed]: state => ({
+      ...state,
+      isUserLogined: true,
+      isLogoutRequestPending: false
     })
   },
   defaultState
