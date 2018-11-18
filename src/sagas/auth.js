@@ -39,8 +39,9 @@ function* emailLoginRequestWorker({ payload: { email, password } }) {
       yield put(emailLoginFailed());
     }
   } catch (e) {
-    emailLoginFailed(e.message);
-    yield put(ToastActionsCreators.displayError(e.message, 2000));
+    const { message } = e;
+    yield put(emailLoginFailed({ message }));
+    yield put(ToastActionsCreators.displayError(message, 2000));
   }
 }
 
@@ -74,8 +75,9 @@ function* signupRequestWorker({
       yield put(signupFailed());
     }
   } catch (e) {
-    yield put(signupFailed({ message: e.message }));
-    yield put(ToastActionsCreators.displayError(e.message, 2000));
+    const { message } = e;
+    yield put(signupFailed({ message }));
+    yield put(ToastActionsCreators.displayError(message, 2000));
   }
 }
 
@@ -91,8 +93,9 @@ function* forgotPasswordWorker({ payload: { email } }) {
     );
     NavigationService.navigate('Login');
   } catch (e) {
-    yield put(forgotPasswordFailed(e.message));
-    yield put(ToastActionsCreators.displayError(e.message, 2000));
+    const { message } = e;
+    yield put(forgotPasswordFailed({ message }));
+    yield put(ToastActionsCreators.displayError(message, 2000));
   }
 }
 
@@ -105,7 +108,9 @@ function* logoutWorker() {
     );
     NavigationService.navigateAndDisableBackButton('Login');
   } catch (e) {
-    yield put(logoutFailed(e.message));
+    const { message } = e;
+    yield put(logoutFailed({ message }));
+    yield put(ToastActionsCreators.displayError(message, 2000));
   }
 }
 
