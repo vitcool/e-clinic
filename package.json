@@ -31,7 +31,9 @@
     "redux": "^4.0.1",
     "redux-actions": "^2.6.4",
     "redux-devtools-extension": "^2.13.5",
-    "redux-saga": "^0.16.2"
+    "redux-saga": "^0.16.2",
+    "tweetnacl": "^1.0.0",
+    "tweetnacl-util": "^0.15.0"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0",

@@ -7,12 +7,12 @@ import ForgotPasswordContainer from '../containers/ForgotPasswordContainer';
 
 export default createStackNavigator(
   {
-    Dashboard: DashboardScreen,
     Login: LoginScreen,
     Signup: SignupScreenContainer,
-    ForgotPassword: ForgotPasswordContainer
+    ForgotPassword: ForgotPasswordContainer,
+    Dashboard: DashboardScreen
   },
   {
-    initialRouteName: 'Login'
+    initialRouteName: 'Dashboard'
   }
 );
