@@ -33,3 +33,18 @@ export const signupDataSchema = {
     required: { error: 'Please supply the specialization' }
   }
 };
+
+export const prescriptionDataSchema = {
+  secretData: {
+    required: { error: 'Please supply the secret data' }
+  },
+  publicData: {
+    required: { error: 'Please supply the public data' }
+  }
+};
+
+export const commentPrescriptionDataSchema = {
+  comment: {
+    required: { error: 'Please supply the comment' }
+  },
+}

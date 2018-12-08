@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { Card } from 'react-native-elements';
 
-import { Input, Button, Text } from '../components/common';
-import checkValidation from '../helpers/validation';
-import { forgotPasswordDataSchema } from '../helpers/validationSchems';
+import { Input, Button, Text } from '../../components/common';
+import checkValidation from '../../helpers/validation';
+import { forgotPasswordDataSchema } from '../../helpers/validationSchems';
 
 export default class ForgotPassword extends React.Component {
   static navigationOptions = {

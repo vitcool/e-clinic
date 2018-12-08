@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { Card, Text } from 'react-native-elements';
 
-import { Input, Button } from '../components/common';
-import checkValidation from '../helpers/validation';
-import { loginDataSchema } from '../helpers/validationSchems';
+import { Input, Button } from '../../components/common';
+import checkValidation from '../../helpers/validation';
+import { loginDataSchema } from '../../helpers/validationSchems';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
