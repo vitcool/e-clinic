@@ -18,15 +18,34 @@ import {
 import * as firebaseAuth from './../firebase/auth';
 import * as firebaseRealtimeDatabase from './../firebase/realtimeDatabase';
 import NavigationService from './../navigation/NavigationService';
+import { generateKeyPair } from '../encryptDecrypt';
+import {
+  saveSecretKeyToAsyncStorage,
+  getSecretKeyFromAsyncStorage
+} from '../helpers/asyncStorage';
+import { fromUint8ArrayToString } from '../helpers/encodeKeys';
 
 function* emailLoginRequestWorker({ payload: { email, password } }) {
   try {
     const response = yield call(firebaseAuth.login, email, password);
     const { user } = response;
     const userClaimsResult = yield call(firebaseAuth.checkUserClaims);
+    const isDoctor = userClaimsResult.claims.doctor;
     if (user) {
+      const { uid: userUid } = user;
+      const secretKey = yield getSecretKeyFromAsyncStorage(user.uid);
+      const response = yield call(
+        firebaseRealtimeDatabase.getUserData,
+        userUid,
+        isDoctor
+      );
+      const userData = response.val();
       yield put(
-        emailLoginSuccess({ user, isDoctor: userClaimsResult.claims.doctor })
+        emailLoginSuccess({
+          user: { ...user, ...userData },
+          isDoctor,
+          secretKey
+        })
       );
       NavigationService.navigateAndDisableBackButton('Dashboard');
       yield put(
@@ -51,18 +70,36 @@ function* signupRequestWorker({
   try {
     const response = yield call(firebaseAuth.signup, email, password);
     const { user } = response;
+    const { uid: userUid } = user;
+
+    const { publicKey, secretKey } = generateKeyPair();
+    yield saveSecretKeyToAsyncStorage(userUid, secretKey);
     if (user) {
-      let userData = { name, surname, email };
+      let userData = {
+        name,
+        surname,
+        email,
+        publicKey: fromUint8ArrayToString(publicKey)
+      };
       if (isDoctor) {
         yield call(firebaseAuth.addDoctorsClaim, email);
         userData = { ...userData, specialization };
       }
-      const userClaimsResult = yield call(firebaseAuth.checkUserClaims);
       const displayName = `${name} ${surname}`;
       yield call(firebaseAuth.updateProfileInfo, user, { displayName });
-      yield call(firebaseRealtimeDatabase.writeUserData, user.uid, userData);
+      yield call(
+        firebaseRealtimeDatabase.writeUserData,
+        userUid,
+        userData,
+        isDoctor
+      );
       yield put(
-        signupSuccess({ user, isDoctor: userClaimsResult.claims.doctor })
+        signupSuccess({
+          user,
+          isDoctor,
+          secretKey: fromUint8ArrayToString(secretKey),
+          publicKey: fromUint8ArrayToString(publicKey)
+        })
       );
       yield put(
         ToastActionsCreators.displayInfo(

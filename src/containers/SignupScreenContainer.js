@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import SignupScreen from '../screens/SignupScreen';
+import SignupScreen from '../screens/Auth/SignupScreen';
 import { signupRequest } from '../modules/auth/actions';
 import { getIsSignupRequestPending } from '../modules/auth/selectors';
 

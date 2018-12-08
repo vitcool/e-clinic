@@ -33,7 +33,11 @@ export default handleActions(
       ...state,
       isUserLogined: true,
       isLoginRequestPending: false,
-      currentUser: { ...payload.user, isDoctor: payload.isDoctor }
+      currentUser: {
+        ...payload.user,
+        isDoctor: payload.isDoctor,
+        secretKey: payload.secretKey
+      }
     }),
     [emailLoginFailed]: (state, { payload }) => ({
       ...state,
@@ -48,7 +52,12 @@ export default handleActions(
     [signupSuccess]: (state, { payload }) => ({
       ...state,
       isSignupRequestPending: false,
-      currentUser: payload.user,
+      currentUser: {
+        ...payload.user,
+        isDoctor: payload.isDoctor,
+        secretKey: payload.secretKey,
+        publicKey: payload.publicKey
+      },
       isUserLogined: true
     }),
     [signupFailed]: (state, { payload }) => ({

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import ForgotPasswordScreen from './../screens/ForgotPasswordScreen';
+import ForgotPasswordScreen from '../screens/Auth/ForgotPasswordScreen';
 import { forgotPasswordRequest } from '../modules/auth/actions';
 import { getIsForgotPasswordRequestPending } from '../modules/auth/selectors';
 

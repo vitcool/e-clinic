@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { Card } from 'react-native-elements';
 
-import { Input, Button, Checkbox } from '../components/common';
-import checkValidation from '../helpers/validation';
-import { signupDataSchema } from '../helpers/validationSchems';
+import { Input, Button, Checkbox } from '../../components/common';
+import checkValidation from '../../helpers/validation';
+import { signupDataSchema } from '../../helpers/validationSchems';
 
 export default class SignupScreen extends React.Component {
   static navigationOptions = {
