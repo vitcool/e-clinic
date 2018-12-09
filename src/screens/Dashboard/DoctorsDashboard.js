@@ -17,9 +17,10 @@ class DoctorsDashboard extends Component {
   handlePrescriptionsPress = () => {
     const { navigateDoctorToPrescriptionsList } = this.props;
     navigateDoctorToPrescriptionsList();
-  }
+  };
   render() {
     const { users } = this.props;
+    const { prescriptionButton } = styles;
     return (
       <View>
         {users && _.keys(users).length > 0 ? (
@@ -31,11 +32,19 @@ class DoctorsDashboard extends Component {
         ) : (
           <Text>Sorry, there are no users for now:(</Text>
         )}
-        <Button onPress={this.handlePrescriptionsPress} title="Prescriptions" />
+        <Button
+          onPress={this.handlePrescriptionsPress}
+          title="Prescriptions"
+          style={prescriptionButton}
+        />
       </View>
     );
   }
 }
+
+const styles = {
+  prescriptionButton: { marginTop: 10 }
+};
 
 DoctorsDashboard.propTypes = {
   users: PropTypes.object,

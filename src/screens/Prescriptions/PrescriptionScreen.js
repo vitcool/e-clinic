@@ -57,9 +57,10 @@ export default class PrescriptionScreen extends React.Component {
   render() {
     const {
       currentUser: { isDoctor },
-      currentPrescription
+      currentPrescription = null
     } = this.props;
     const { publicData, secretData, comment, validationErrors } = this.state;
+    const { prescriptionTextStyle } = styles;
     return (
       <View>
         <Card>
@@ -86,14 +87,18 @@ export default class PrescriptionScreen extends React.Component {
                 style={secretData}
                 errors={validationErrors}
               />
-              {currentPrescription.comment && (
+              {currentPrescription && currentPrescription.comment && (
                 <Text>{currentPrescription.comment}</Text>
               )}
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <Text>{currentPrescription.publicData}</Text>
-              <Text>{currentPrescription.secretData}</Text>
+              <Text label="Public Data" textStyle={prescriptionTextStyle}>
+                {currentPrescription.publicData}
+              </Text>
+              <Text label="Private Data" textStyle={prescriptionTextStyle}>
+                {currentPrescription.secretData}
+              </Text>
               <Input
                 name="comment"
                 placeholder="12345678"
@@ -118,6 +123,12 @@ export default class PrescriptionScreen extends React.Component {
     );
   }
 }
+
+const styles = {
+  prescriptionTextStyle: {
+    marginLeft: 20
+  }
+};
 
 PrescriptionScreen.propTypes = {
   createPrescriptionRequest: PropTypes.func,

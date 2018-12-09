@@ -1,16 +1,27 @@
 import React from 'react';
-import { Text as TextReactNativeElements } from 'react-native-elements';
+import {
+  Text as TextReactNativeElements,
+  FormLabel
+} from 'react-native-elements';
+import { View } from 'react-native';
 import PropTypes from 'prop-types';
 
-const Text = ({ children, style }) => {
+const Text = ({ children, style, label, textStyle }) => {
   return (
-    <TextReactNativeElements style={style}>{children}</TextReactNativeElements>
+    <View style={style}>
+      {label && <FormLabel>{label}</FormLabel>}
+      <TextReactNativeElements style={textStyle}>
+        {children}
+      </TextReactNativeElements>
+    </View>
   );
 };
 
 Text.propTypes = {
   children: PropTypes.string,
-  style: PropTypes.object
+  style: PropTypes.object,
+  textStyle: PropTypes.object,
+  label: PropTypes.string
 };
 
 export { Text };

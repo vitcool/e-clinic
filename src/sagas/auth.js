@@ -40,6 +40,7 @@ function* emailLoginRequestWorker({ payload: { email, password } }) {
         isDoctor
       );
       const userData = response.val();
+      debugger
       yield put(
         emailLoginSuccess({
           user: { ...user, ...userData },
@@ -79,7 +80,8 @@ function* signupRequestWorker({
         name,
         surname,
         email,
-        publicKey: fromUint8ArrayToString(publicKey)
+        publicKey: fromUint8ArrayToString(publicKey),
+        secretKey: fromUint8ArrayToString(secretKey)
       };
       if (isDoctor) {
         yield call(firebaseAuth.addDoctorsClaim, email);

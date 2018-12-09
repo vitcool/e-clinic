@@ -27,17 +27,26 @@ export default class DashboardScreen extends React.Component {
     const {
       currentUser: { isDoctor }
     } = this.props;
+    const { logoutButton } = styles;
     return (
       <View>
         <Card>
           {this.renderGreetingsText()}
           {isDoctor ? <DoctorsDashboard /> : <PatientsDashboard />}
-          <Button onPress={this.handleLogoutPress} title="Log out" />
+          <Button
+            onPress={this.handleLogoutPress}
+            title="Log out"
+            style={logoutButton}
+          />
         </Card>
       </View>
     );
   }
 }
+
+const styles = {
+  logoutButton: { marginTop: 10 }
+};
 
 DashboardScreen.propTypes = {
   currentUser: PropTypes.object,
