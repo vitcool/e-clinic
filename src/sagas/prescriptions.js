@@ -68,10 +68,12 @@ function* createPrescriptionWorker({ payload: { secretData, publicData } }) {
       //secretKey: patientSecretKey,
       id: patientId
     } = yield select(getCurrentPatient);
-    const { uid: doctorId, publicKey: doctorPublicKey } = yield select(
-      getCurrentUser
-    );
-    const doctorsSecretKey = yield getSecretKeyFromAsyncStorage(doctorId);
+    const {
+      uid: doctorId,
+      publicKey: doctorPublicKey,
+      secretKey: doctorsSecretKey
+    } = yield select(getCurrentUser);
+    //const doctorsSecretKey = yield getSecretKeyFromAsyncStorage(doctorId);
     const doctorsSecretKeyUint8Array = fromStringToUint8Array(doctorsSecretKey);
     const patientPublicKeyUint8Array = fromStringToUint8Array(patientPublicKey);
     const { box, nonce } = encryptMessage(
@@ -93,6 +95,13 @@ function* createPrescriptionWorker({ payload: { secretData, publicData } }) {
     };
     yield call(firebaseRealtimeDatabase.writeUpdatePrescription, data);
     yield put(createPrescriptionSuccess());
+    yield put(
+      ToastActionsCreators.displayInfo(
+        `${publicData} prescription is created  successfully!`,
+        2000
+      )
+    );
+    NavigationService.navigateAndDisableBackButton('Dashboard');
   } catch (e) {
     yield put(
       createPrescriptionFailed({ message: `fetchUsersRequestWorker ${e}` })
@@ -157,15 +166,15 @@ function* selectPrescriptionWorker({
     let decryptedComment = null;
     if (prescription !== null) {
       const { doctorPublicKey, patientPublicKey } = prescription;
-      const { uid: userId, isDoctor } = yield select(getCurrentUser);
+      const { /*uid: userId,*/ isDoctor, secretKey } = yield select(
+        getCurrentUser
+      );
       if (!isDoctor) {
-        const patientSecretKey = yield getSecretKeyFromAsyncStorage(userId);
+        //const patientSecretKey = yield getSecretKeyFromAsyncStorage(userId);
         const doctorPublicKeyUint8Array = fromStringToUint8Array(
           doctorPublicKey
         );
-        const patientSecretKeyUint8Array = fromStringToUint8Array(
-          patientSecretKey
-        );
+        const patientSecretKeyUint8Array = fromStringToUint8Array(secretKey);
         const { box, nonce } = prescription.encryptedData;
         decryptedData = decryptMessage(
           doctorPublicKeyUint8Array,
@@ -176,13 +185,11 @@ function* selectPrescriptionWorker({
           }
         );
       } else {
-        const doctorsSecretKey = yield getSecretKeyFromAsyncStorage(userId);
+        //const doctorsSecretKey = yield getSecretKeyFromAsyncStorage(userId);
         const patientPublicKeyUint8Array = fromStringToUint8Array(
           patientPublicKey
         );
-        const doctorSecretKeyUint8Array = fromStringToUint8Array(
-          doctorsSecretKey
-        );
+        const doctorSecretKeyUint8Array = fromStringToUint8Array(secretKey);
 
         decryptedData = decryptMessage(
           patientPublicKeyUint8Array,
