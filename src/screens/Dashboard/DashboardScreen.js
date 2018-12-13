@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { Card } from 'react-native-elements';
 import PropTypes from 'prop-types';
 
@@ -29,7 +29,7 @@ export default class DashboardScreen extends React.Component {
     } = this.props;
     const { logoutButton } = styles;
     return (
-      <View>
+      <ScrollView>
         <Card>
           {this.renderGreetingsText()}
           {isDoctor ? <DoctorsDashboard /> : <PatientsDashboard />}
@@ -39,7 +39,7 @@ export default class DashboardScreen extends React.Component {
             style={logoutButton}
           />
         </Card>
-      </View>
+      </ScrollView>
     );
   }
 }

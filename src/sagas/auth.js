@@ -40,7 +40,6 @@ function* emailLoginRequestWorker({ payload: { email, password } }) {
         isDoctor
       );
       const userData = response.val();
-      debugger
       yield put(
         emailLoginSuccess({
           user: { ...user, ...userData },

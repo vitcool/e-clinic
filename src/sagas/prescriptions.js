@@ -61,13 +61,13 @@ function* fetchUsersRequestWorker() {
   }
 }
 
-function* createPrescriptionWorker({ payload: { secretData, publicData } }) {
+function* createPrescriptionWorker({
+  payload: { secretData, publicData, pillsScheduleData }
+}) {
   try {
-    const {
-      publicKey: patientPublicKey,
-      //secretKey: patientSecretKey,
-      id: patientId
-    } = yield select(getCurrentPatient);
+    const { publicKey: patientPublicKey, id: patientId } = yield select(
+      getCurrentPatient
+    );
     const {
       uid: doctorId,
       publicKey: doctorPublicKey,
@@ -85,13 +85,24 @@ function* createPrescriptionWorker({ payload: { secretData, publicData } }) {
       box: fromUint8ArrayToString(box),
       nonce: fromUint8ArrayToString(nonce)
     };
+    // debugger
+    const { box: scheduleBox, nonce: scheduleNonce } = encryptMessage(
+      doctorsSecretKeyUint8Array,
+      patientPublicKeyUint8Array,
+      pillsScheduleData.toString()
+    );
+    const pillsSchedule = {
+      box: fromUint8ArrayToString(scheduleBox),
+      nonce: fromUint8ArrayToString(scheduleNonce)
+    };
     const data = {
       doctorId,
       doctorPublicKey,
       patientPublicKey,
       patientId,
       encryptedData,
-      publicData
+      publicData,
+      pillsSchedule
     };
     yield call(firebaseRealtimeDatabase.writeUpdatePrescription, data);
     yield put(createPrescriptionSuccess());
@@ -164,6 +175,7 @@ function* selectPrescriptionWorker({
     const prescription = response.val();
     let decryptedData = null;
     let decryptedComment = null;
+    let decryptedScheduleData = null;
     if (prescription !== null) {
       const { doctorPublicKey, patientPublicKey } = prescription;
       const { /*uid: userId,*/ isDoctor, secretKey } = yield select(
@@ -176,6 +188,10 @@ function* selectPrescriptionWorker({
         );
         const patientSecretKeyUint8Array = fromStringToUint8Array(secretKey);
         const { box, nonce } = prescription.encryptedData;
+        const {
+          box: scheduleBox,
+          nonce: scheduleNonce
+        } = prescription.pillsSchedule;
         decryptedData = decryptMessage(
           doctorPublicKeyUint8Array,
           patientSecretKeyUint8Array,
@@ -184,6 +200,15 @@ function* selectPrescriptionWorker({
             nonce: fromStringToUint8Array(nonce)
           }
         );
+        decryptedScheduleData = decryptMessage(
+          doctorPublicKeyUint8Array,
+          patientSecretKeyUint8Array,
+          {
+            box: fromStringToUint8Array(scheduleBox),
+            nonce: fromStringToUint8Array(scheduleNonce)
+          }
+        );
+        // debugger
       } else {
         //const doctorsSecretKey = yield getSecretKeyFromAsyncStorage(userId);
         const patientPublicKeyUint8Array = fromStringToUint8Array(
@@ -197,6 +222,15 @@ function* selectPrescriptionWorker({
           {
             box: fromStringToUint8Array(prescription.encryptedData.box),
             nonce: fromStringToUint8Array(prescription.encryptedData.nonce)
+          }
+        );
+
+        decryptedScheduleData = decryptMessage(
+          patientPublicKeyUint8Array,
+          doctorSecretKeyUint8Array,
+          {
+            box: fromStringToUint8Array(prescription.pillsSchedule.box),
+            nonce: fromStringToUint8Array(prescription.pillsSchedule.nonce)
           }
         );
 
@@ -215,7 +249,8 @@ function* selectPrescriptionWorker({
           currentPrescription: {
             ...prescription,
             secretData: decryptedData,
-            comment: decryptedComment
+            comment: decryptedComment,
+            pillsSchedule: decryptedScheduleData
           }
         })
       );

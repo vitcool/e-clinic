@@ -2,8 +2,9 @@ import React from 'react';
 import { View } from 'react-native';
 import { Card } from 'react-native-elements';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
-import { Input, Button, Text } from '../../components/common';
+import { Input, Button, Text, Table } from '../../components/common';
 import checkValidation from '../../helpers/validation';
 import {
   prescriptionDataSchema,
@@ -19,21 +20,24 @@ export default class PrescriptionScreen extends React.Component {
     secretData: '',
     publicData: '',
     comment: '',
+    pillsSchedule: [{ title: '', doze: '', interval: '', id: 0 }],
     validationErrors: {}
   };
 
   handleAddPrescriptionButtonClick = () => {
     const { createPrescriptionRequest } = this.props;
-    const { secretData, publicData } = this.state;
+    const { secretData, publicData, pillsSchedule } = this.state;
     const prescriptionData = { secretData, publicData };
     const validation = checkValidation(
       prescriptionData,
       prescriptionDataSchema
     );
-
     this.setState({ validationErrors: validation.errors });
-
-    validation.valid && createPrescriptionRequest({ secretData, publicData });
+    const pillsScheduleData = JSON.stringify(
+      _.filter(pillsSchedule, item => _.isEmpty(item.title))
+    );
+    validation.valid &&
+      createPrescriptionRequest({ secretData, publicData, pillsScheduleData });
   };
 
   handleAddCommentButtonClick = () => {
@@ -44,9 +48,7 @@ export default class PrescriptionScreen extends React.Component {
       commentPescriptionData,
       commentPrescriptionDataSchema
     );
-
     this.setState({ validationErrors: validation.errors });
-
     validation.valid && uploadPrescriptionCommentRequest({ comment });
   };
 
@@ -54,13 +56,39 @@ export default class PrescriptionScreen extends React.Component {
     this.setState({ [name]: data });
   };
 
+  onAddPillSchedulePress = () => {
+    const { pillsSchedule } = this.state;
+    const newPillsSchedule = [
+      ...pillsSchedule,
+      { title: '', doze: '', interval: '', id: pillsSchedule.length }
+    ];
+    this.setState({ pillsSchedule: newPillsSchedule });
+  };
+
+  onPillScheduleItemChange = (text, item, index) => {
+    const newPillsSchedule = [...this.state.pillsSchedule];
+    newPillsSchedule[index][item] = text;
+    this.setState({ pillsSchedule: newPillsSchedule });
+  };
+
   render() {
     const {
       currentUser: { isDoctor },
       currentPrescription = null
     } = this.props;
-    const { publicData, secretData, comment, validationErrors } = this.state;
-    const { prescriptionTextStyle } = styles;
+    const {
+      publicData,
+      secretData,
+      comment,
+      validationErrors,
+      pillsSchedule
+    } = this.state;
+    const {
+      prescriptionTextStyle,
+      buttonStyle,
+      tableComponentStyle,
+      tableStyle
+    } = styles;
     return (
       <View>
         <Card>
@@ -87,6 +115,14 @@ export default class PrescriptionScreen extends React.Component {
                 style={secretData}
                 errors={validationErrors}
               />
+              <Table
+                label="Pills"
+                allowEdit={true}
+                data={pillsSchedule}
+                style={tableComponentStyle}
+                onAddPillPress={this.onAddPillSchedulePress}
+                onItemChange={this.onPillScheduleItemChange}
+              />
               {currentPrescription && currentPrescription.comment && (
                 <Text>{currentPrescription.comment}</Text>
               )}
@@ -99,6 +135,13 @@ export default class PrescriptionScreen extends React.Component {
               <Text label="Private Data" textStyle={prescriptionTextStyle}>
                 {currentPrescription.secretData}
               </Text>
+              <Table
+                label="Pills"
+                data={JSON.parse(currentPrescription.pillsSchedule)}
+                allowEdit={false}
+                style={tableComponentStyle}
+                tableStyle={tableStyle}
+              />
               <Input
                 name="comment"
                 placeholder="12345678"
@@ -117,6 +160,7 @@ export default class PrescriptionScreen extends React.Component {
                 : this.handleAddCommentButtonClick
             }
             title={`${isDoctor ? 'Add prescrition' : 'Add comment'}`}
+            style={buttonStyle}
           />
         </Card>
       </View>
@@ -126,6 +170,15 @@ export default class PrescriptionScreen extends React.Component {
 
 const styles = {
   prescriptionTextStyle: {
+    marginLeft: 20
+  },
+  buttonStyle: {
+    marginTop: 10
+  },
+  tableComponentStyle: {
+    marginTop: 10
+  },
+  tableStyle: {
     marginLeft: 20
   }
 };
