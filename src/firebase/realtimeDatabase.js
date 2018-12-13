@@ -26,7 +26,6 @@ export const fetchUsers = () => {
 };
 
 export const writeUpdatePrescription = (data, prescriptionId = null) => {
-  debugger
   let prescriptionIdM = prescriptionId;
   if (!prescriptionIdM) {
     const { patientId, doctorId, publicData } = data;

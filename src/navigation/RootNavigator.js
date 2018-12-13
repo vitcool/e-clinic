@@ -7,6 +7,7 @@ import ForgotPasswordContainer from '../containers/ForgotPasswordContainer';
 import DashboardScreenContainer from '../containers/DashboardScreenContainer';
 import PrescriptionScreenContainer from '../containers/PrescriptionScreenContainer';
 import PatientsDashboardContainer from '../containers/PatientsDashboardContainer';
+import ScheduleScreenContainer from '../containers/ScheduleScreenContainer';
 
 export default createStackNavigator(
   {
@@ -15,7 +16,8 @@ export default createStackNavigator(
     ForgotPassword: ForgotPasswordContainer,
     Dashboard: DashboardScreenContainer,
     Prescription: PrescriptionScreenContainer,
-    PatientsDashboard: PatientsDashboardContainer
+    PatientsDashboard: PatientsDashboardContainer,
+    Schedule: ScheduleScreenContainer
   },
   {
     initialRouteName: 'Login'
