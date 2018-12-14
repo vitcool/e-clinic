@@ -16,6 +16,11 @@ export default class DashboardScreen extends React.Component {
     logoutRequest();
   };
 
+  handleComparingPress = () => {
+    const { gotoComparingScreen } = this.props;
+    gotoComparingScreen();
+  };
+
   renderGreetingsText = () => {
     const {
       currentUser: { isDoctor, displayName }
@@ -38,6 +43,11 @@ export default class DashboardScreen extends React.Component {
             title="Log out"
             style={logoutButton}
           />
+          <Button
+            onPress={this.handleComparingPress}
+            title="Go to comparing screen"
+            style={logoutButton}
+          />
         </Card>
       </ScrollView>
     );
@@ -50,5 +60,6 @@ const styles = {
 
 DashboardScreen.propTypes = {
   currentUser: PropTypes.object,
-  logoutRequest: PropTypes.func
+  logoutRequest: PropTypes.func,
+  gotoComparingScreen: PropTypes.func
 };

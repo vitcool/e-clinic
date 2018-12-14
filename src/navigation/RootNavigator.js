@@ -8,6 +8,7 @@ import DashboardScreenContainer from '../containers/DashboardScreenContainer';
 import PrescriptionScreenContainer from '../containers/PrescriptionScreenContainer';
 import PatientsDashboardContainer from '../containers/PatientsDashboardContainer';
 import ScheduleScreenContainer from '../containers/ScheduleScreenContainer';
+import ComparingScreenContainer from '../containers/CompatingScreenContainer';
 
 export default createStackNavigator(
   {
@@ -17,7 +18,8 @@ export default createStackNavigator(
     Dashboard: DashboardScreenContainer,
     Prescription: PrescriptionScreenContainer,
     PatientsDashboard: PatientsDashboardContainer,
-    Schedule: ScheduleScreenContainer
+    Schedule: ScheduleScreenContainer,
+    Comparing: ComparingScreenContainer
   },
   {
     initialRouteName: 'Login'

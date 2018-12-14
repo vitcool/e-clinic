@@ -1,5 +1,6 @@
 import nacl from 'tweetnacl';
 import naclUtils from 'tweetnacl-util';
+import RSAKey from 'react-native-rsa';
 
 const BobKeys = nacl.box.keyPair();
 
@@ -48,7 +49,11 @@ export const encryptMessageFromBobToAlice = message => {
   return resultMessage;
 };
 
-export const decryptMessage = (senderPublicKey, recipientSecretKey, message) => {
+export const decryptMessage = (
+  senderPublicKey,
+  recipientSecretKey,
+  message
+) => {
   const result = nacl.box.open(
     message.box,
     message.nonce,
@@ -75,4 +80,43 @@ export const decryptMessageFromBobToAlice = message => {
 
   const utf8 = naclUtils.encodeUTF8(payload);
   return utf8;
+};
+
+export const encryptDecryptTweetNacl = text => {
+  const startTime = new Date();
+  const senderKeypair = nacl.box.keyPair();
+  const recipientKeypair = nacl.box.keyPair();
+  const nonce = nacl.randomBytes(24);
+  const box = nacl.box(
+    naclUtils.decodeUTF8(text),
+    nonce,
+    recipientKeypair.publicKey,
+    senderKeypair.secretKey
+  );
+  const decoded = nacl.box.open(
+    box,
+    nonce,
+    senderKeypair.publicKey,
+    recipientKeypair.secretKey
+  );
+  text = naclUtils.encodeUTF8(decoded);
+  const endTime = new Date();
+  return endTime - startTime; //in ms
+};
+
+export const encryptDecryptReactNativeRsa = text => {
+  const startTime = new Date();
+  const bits = 1024;
+  const exponent = '10001'; // must be a string. This is hex string. decimal = 65537
+  const rsaKeys = new RSAKey();
+  rsaKeys.generate(bits, exponent);
+  const publicKey = rsaKeys.getPublicString(); // return json encoded string
+  const privateKey = rsaKeys.getPrivateString(); // return json encoded string
+  const rsa = new RSAKey();
+  rsa.setPublicString(publicKey);
+  const encrypted = rsa.encrypt(text);
+  rsa.setPrivateString(privateKey);
+  rsa.decrypt(encrypted); // decrypted == originText
+  const endTime = new Date();
+  return endTime - startTime; //in ms
 };
