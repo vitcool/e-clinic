@@ -46,5 +46,11 @@ export const prescriptionDataSchema = {
 export const commentPrescriptionDataSchema = {
   comment: {
     required: { error: 'Please supply the comment' }
-  },
+  }
+}
+
+export const comparingTextDataSchema = {
+  text: {
+    required: { error: 'Please supply the text for encrypting' }
+  }
 }
