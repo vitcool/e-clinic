@@ -27,7 +27,7 @@ export default class ScheduleScreen extends React.Component {
             <ListItem
               key={l.title}
               title={l.title}
-              subtitle={`${l.time} doze is ${l.doze} portion`}
+              subtitle={`${l.time} - ${l.doze}`}
             />
           ))}
         </List>

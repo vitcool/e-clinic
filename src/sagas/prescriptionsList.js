@@ -13,6 +13,7 @@ import { fromStringToUint8Array } from '../helpers/encodeKeys';
 import { generateSchedule } from '../helpers/processSchedule';
 import NavigationService from '../navigation/NavigationService';
 function* createPrescriptionsListWorker() {
+
   try {
     const prescriptions = yield select(getPrescriptions);
     const prescriptionsData = yield all(

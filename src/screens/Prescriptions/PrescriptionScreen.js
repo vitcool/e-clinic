@@ -34,7 +34,7 @@ export default class PrescriptionScreen extends React.Component {
     );
     this.setState({ validationErrors: validation.errors });
     const pillsScheduleData = JSON.stringify(
-      _.filter(pillsSchedule, item => _.isEmpty(item.title))
+      _.filter(pillsSchedule, item => !_.isEmpty(item.title))
     );
     validation.valid &&
       createPrescriptionRequest({ secretData, publicData, pillsScheduleData });

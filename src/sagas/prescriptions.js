@@ -85,7 +85,6 @@ function* createPrescriptionWorker({
       box: fromUint8ArrayToString(box),
       nonce: fromUint8ArrayToString(nonce)
     };
-    // debugger
     const { box: scheduleBox, nonce: scheduleNonce } = encryptMessage(
       doctorsSecretKeyUint8Array,
       patientPublicKeyUint8Array,
@@ -208,7 +207,6 @@ function* selectPrescriptionWorker({
             nonce: fromStringToUint8Array(scheduleNonce)
           }
         );
-        // debugger
       } else {
         //const doctorsSecretKey = yield getSecretKeyFromAsyncStorage(userId);
         const patientPublicKeyUint8Array = fromStringToUint8Array(
@@ -320,7 +318,6 @@ function* uploadPrescriptionCommentWorker({ payload: { comment } }) {
       data,
       prescriptionId
     );
-    //debugger;
     //!!!!only for test
     // const decryptedData = decryptMessage(
     //   doctorPublicKeyUint8Array,
@@ -328,7 +325,6 @@ function* uploadPrescriptionCommentWorker({ payload: { comment } }) {
     //   encryptedData
     // );
     //!!!! finish only for test
-    //debugger;
     //cont => send data to firebase!!!
     yield put(uploadPrescriptionCommentSuccess());
   } catch (e) {

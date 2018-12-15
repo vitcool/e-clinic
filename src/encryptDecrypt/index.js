@@ -43,7 +43,6 @@ export const encryptMessageFromBobToAlice = message => {
     alice.publicKey,
     bob.secretKey
   );
-  //debugger;
   //send message to Alice
   const resultMessage = { box, nonce };
   return resultMessage;
